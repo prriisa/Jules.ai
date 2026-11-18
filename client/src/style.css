@@ -1,0 +1,380 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* Palette (space-separated RGB so Tailwind's /alpha works) */
+  --canvas: 248 249 247;
+  --surface: 255 255 255;
+  --sidebar: 246 248 244;
+  --panel: 237 241 234;
+  --line: 224 229 221;
+  --user-bubble: 235 240 232;
+  --ink: 36 42 37;
+  --ink-muted: 111 120 112;
+  --ink-faint: 148 156 148;
+  --jules: 105 129 101;
+  --jules-dark: 78 101 74;
+  --sage: 101 119 96;
+
+  /* Text/icons that sit on top of --sage or --jules fills */
+  --on-accent: 255 255 255;
+
+  /* Theme-dependent effects (previously hardcoded) */
+  --shadow-soft: 0 16px 44px rgb(48 62 46 / 0.12);
+  --shadow-composer: 0 8px 32px rgb(25 35 25 / 0.06);
+  --shadow-composer-focus: 0 10px 36px rgb(25 35 25 / 0.09);
+  --focus-ring: 0 0 0 4px rgb(var(--jules) / 0.1);
+  --selection: 102 123 99;
+  --selection-alpha: 1;
+  --selection-text: 255 255 255;
+
+  color: rgb(var(--ink));
+  background: rgb(var(--canvas));
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  color-scheme: light;
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+:root.dark {
+  --canvas: 16 19 18;
+  --surface: 24 29 27;
+  --sidebar: 19 24 22;
+  --panel: 31 39 34;
+  --line: 47 57 50;
+  --user-bubble: 38 48 41;
+  --ink: 232 237 232;
+  --ink-muted: 163 172 164;
+  --ink-faint: 138 150 140; /* nudged up so small text clears 4.5:1 on --panel */
+  --jules: 163 187 155;
+  --jules-dark: 183 204 176;
+  --sage: 106 132 102;
+
+  --on-accent: 16 19 18;
+
+  /* Dark surfaces need black, deeper shadows and a stronger focus ring */
+  --shadow-soft: 0 16px 44px rgb(0 0 0 / 0.45);
+  --shadow-composer: 0 8px 32px rgb(0 0 0 / 0.4);
+  --shadow-composer-focus: 0 10px 36px rgb(0 0 0 / 0.55);
+  --focus-ring: 0 0 0 4px rgb(var(--jules) / 0.22);
+  --selection: 163 187 155;
+  --selection-alpha: 0.35;
+  --selection-text: 232 237 232;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: rgb(var(--canvas));
+  color: rgb(var(--ink));
+  transition: background-color 240ms ease, color 240ms ease;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.field {
+  width: 100%;
+  border: 1px solid rgb(var(--line));
+  border-radius: 0.75rem;
+  background-color: rgb(var(--surface));
+  padding: 13px 1rem;
+  color: rgb(var(--ink));
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 240ms ease, color 240ms ease;
+}
+
+.field::placeholder {
+  color: rgb(var(--ink-faint));
+  opacity: 1;
+}
+
+.field:focus {
+  border-color: rgb(var(--jules));
+  box-shadow: var(--focus-ring);
+}
+
+/* Browser autofill paints its own light background; keep it on-theme */
+.field:-webkit-autofill,
+.field:-webkit-autofill:hover,
+.field:-webkit-autofill:focus {
+  -webkit-text-fill-color: rgb(var(--ink));
+  caret-color: rgb(var(--ink));
+  box-shadow: 0 0 0 1000px rgb(var(--surface)) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+.field:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px rgb(var(--surface)) inset, var(--focus-ring);
+}
+
+.primary-button,
+.new-chat-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: rgb(var(--ink));
+  color: rgb(var(--canvas));
+  font-weight: 500;
+  transition: opacity 150ms ease, background-color 240ms ease, color 240ms ease;
+}
+
+.primary-button {
+  width: 100%;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 13px;
+}
+
+.primary-button:hover:not(:disabled),
+.new-chat-button:hover {
+  opacity: 0.85;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.secondary-button,
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(var(--line));
+  background-color: rgb(var(--surface));
+  color: rgb(var(--ink-muted));
+  transition: border-color 200ms ease, color 200ms ease, background-color 240ms ease;
+}
+
+.secondary-button {
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.theme-toggle {
+  height: 2.25rem;
+  border-radius: 9999px;
+  padding: 0 0.75rem;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.secondary-button:hover,
+.theme-toggle:hover {
+  border-color: rgb(var(--jules) / 0.5);
+  color: rgb(var(--ink));
+}
+
+.icon-button {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  border-radius: 0.75rem;
+  color: rgb(var(--ink-muted));
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.icon-button:hover:not(:disabled) {
+  background-color: rgb(var(--panel));
+  color: rgb(var(--ink));
+}
+
+.icon-button:disabled {
+  opacity: 0.4;
+}
+
+.new-chat-button {
+  height: 2.5rem;
+  justify-content: flex-start;
+  gap: 0.625rem;
+  border-radius: 0.75rem;
+  padding: 0 0.75rem;
+  font-size: 12px;
+}
+
+.search-field {
+  display: flex;
+  height: 2.25rem;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgb(var(--line));
+  border-radius: 0.75rem;
+  background-color: rgb(var(--surface));
+  padding: 0 0.625rem;
+}
+
+.search-field input {
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  color: rgb(var(--ink));
+  font-size: 11px;
+  outline: none;
+}
+
+.search-field input::placeholder {
+  color: rgb(var(--ink-faint));
+}
+
+.conversation-link {
+  display: flex;
+  width: 100%;
+  height: 2.25rem;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 0.75rem;
+  padding: 0 0.625rem;
+  color: rgb(var(--ink-muted));
+  font-size: 11px;
+  text-align: left;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.conversation-link:hover,
+.conversation-link-active {
+  background-color: rgb(var(--panel));
+  color: rgb(var(--ink));
+}
+
+.conversation-link-active {
+  font-weight: 500;
+}
+
+.composer-shell {
+  max-width: 760px;
+  margin: 0 auto;
+  border: 1px solid rgb(var(--line));
+  border-radius: 22px;
+  background-color: rgb(var(--surface));
+  padding: 0.75rem 1rem;
+  box-shadow: var(--shadow-composer);
+  transition: border-color 150ms ease, box-shadow 150ms ease, background-color 240ms ease;
+}
+
+.composer-shell:focus-within {
+  border-color: rgb(var(--jules) / 0.5);
+  box-shadow: var(--shadow-composer-focus);
+}
+
+.composer-input {
+  display: block;
+  width: 100%;
+  min-height: 1.75rem;
+  max-height: 180px;
+  resize: none;
+  overflow-y: auto;
+  background: transparent;
+  padding: 0.25rem;
+  color: rgb(var(--ink));
+  font-size: 13px;
+  line-height: 1.5rem;
+  outline: none;
+}
+
+.composer-input::placeholder {
+  color: rgb(var(--ink-faint));
+}
+
+.composer-tool,
+.send-button {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 9999px;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.composer-tool {
+  color: rgb(var(--ink-muted));
+}
+
+.composer-tool:hover:not(:disabled) {
+  background-color: rgb(var(--panel));
+  color: rgb(var(--ink));
+}
+
+.composer-tool:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.send-button {
+  background-color: rgb(var(--jules));
+  color: rgb(var(--on-accent));
+}
+
+.send-button:hover:not(:disabled) {
+  background-color: rgb(var(--jules-dark));
+}
+
+.send-button:disabled {
+  cursor: not-allowed;
+  background-color: rgb(var(--panel));
+  color: rgb(var(--ink-faint));
+}
+
+.message-enter {
+  animation: message-in 380ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+.auth-mode-enter {
+  animation: message-in 320ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  color: rgb(var(--selection-text));
+  background: rgb(var(--selection) / var(--selection-alpha));
+}
+
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
