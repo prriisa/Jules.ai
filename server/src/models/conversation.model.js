@@ -21,6 +21,6 @@ const conversationSchema = mongoose.Schema({
 
 conversationSchema.index({ user: 1, lastMessage: -1 })
 
-conversationModel = mongoose.model("Conversation", conversationSchema)
+const conversationModel = mongoose.model("Conversation", conversationSchema)
 
 export default conversationModel

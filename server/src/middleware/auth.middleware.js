@@ -14,14 +14,7 @@ const authMiddleware = asyncHandler(async (req, _res, next) => {
   }
 
   const payload = verifyAccessToken(authorization.slice(7));
-  if (typeof payload === "string" || typeof payload.id !== "string") {
-    throw new AppError(401, "Invalid access token");
-  }
-
-  const user = await findUserById(payload.id);
-  if (!user) throw new AppError(401, "Invalid access token");
-
-  req.user = user;
+  req.user = payload;
   next();
 });
 
