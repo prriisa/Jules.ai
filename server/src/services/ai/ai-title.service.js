@@ -3,7 +3,7 @@ import { config } from "../../config/env.js"
 import * as z from "zod"
 import { SystemMessage, HumanMessage } from "langchain"
 
-model = new ChatGroq({
+const model = new ChatGroq({
     model: "qwen/qwen3.8-27b",
     apiKey: config.groqApiKey
 })
