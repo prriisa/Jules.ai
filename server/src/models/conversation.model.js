@@ -18,3 +18,9 @@ const conversationSchema = mongoose.Schema({
         default: null
     }
 }, { timestamps: { createdAt: "createdAt", updatedAt: "lastUpdate" } })
+
+conversationSchema.index({ user: 1, lastMessage: -1 })
+
+conversationModel = mongoose.model("Conversation", conversationSchema)
+
+export default conversationModel

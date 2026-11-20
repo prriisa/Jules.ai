@@ -17,6 +17,7 @@ const required = (value, name) => {
 
 const accessTokenSecret = required(process.env.ACCESS_TOKEN_SECRET, "ACCESS_TOKEN_SECRET");
 const refreshTokenSecret = required(process.env.REFRESH_TOKEN_SECRET, "REFRESH_TOKEN_SECRET");
+const groqApiKey = required(process.env.GROQ_API_KEY, "GROQ_API_KEY");
 
 if (accessTokenSecret.length < 32 || refreshTokenSecret.length < 32) {
   throw new Error("JWT secrets must be at least 32 characters long.");
@@ -27,5 +28,6 @@ export const config = Object.freeze({
   port: Number(process.env.PORT || 5000),
   mongoUri: required(process.env.MONGODB_URI, "MONGODB_URI"),
   accessTokenSecret,
-  refreshTokenSecret
+  refreshTokenSecret,
+  groqApiKey
 });
