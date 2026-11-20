@@ -20,7 +20,7 @@ export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) 
     <form className="mt-8 space-y-5" onSubmit={submit}>
       {isRegister && (
         <label className="block">
-          <span className="mb-2 block text-[13px] font-medium text-ink">Your name</span>
+          <span className="mb-2 block text-[15px] font-medium text-ink">Your name</span>
           <input
             className="field"
             autoComplete="name"
@@ -34,7 +34,7 @@ export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) 
         </label>
       )}
       <label className="block">
-        <span className="mb-2 block text-[13px] font-medium text-ink">Email address</span>
+        <span className="mb-2 block text-[15px] font-medium text-ink">Email address</span>
         <input
           className="field"
           autoComplete="email"
@@ -47,7 +47,7 @@ export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) 
         />
       </label>
       <label className="block">
-        <span className="mb-2 block text-[13px] font-medium text-ink">Password</span>
+        <span className="mb-2 block text-[15px] font-medium text-ink">Password</span>
         <span className="relative block">
           <input
             className="field pr-12"
@@ -69,11 +69,11 @@ export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) 
             {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
           </button>
         </span>
-        {isRegister && <span className="mt-2 block text-[11px] text-ink-faint">Use at least 8 characters, including a letter and a number.</span>}
+        {isRegister && <span className="mt-2 block text-[13px] text-ink-faint">Use at least 8 characters, including a letter and a number.</span>}
       </label>
 
       {error && (
-        <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-3 text-[13px] text-red-600 dark:text-red-300" role="alert">
+        <p className="rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-3 text-[15px] text-red-600 dark:text-red-300" role="alert">
           {error}
         </p>
       )}

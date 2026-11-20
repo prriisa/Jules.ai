@@ -20,7 +20,8 @@ export default {
         "on-accent": "rgb(var(--on-accent) / <alpha-value>)"
       },
       fontFamily: {
-        display: ["Georgia", "Times New Roman", "serif"]
+        sans: ['"Plus Jakarta Sans"', "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", '"Segoe UI"', "sans-serif"],
+        display: ["Fraunces", "Georgia", '"Times New Roman"', "serif"]
       },
       boxShadow: {
         soft: "var(--shadow-soft)"

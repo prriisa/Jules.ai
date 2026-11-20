@@ -57,12 +57,12 @@ export default function ChatComposer({ draft, onDraftChange, onSend }) {
           >
             <Plus size={17} />
           </button>
-          <span className="rounded-full bg-panel px-2.5 py-1 text-[10px] font-medium text-ink-muted">
+          <span className="rounded-full bg-panel px-2.5 py-1 text-[12px] font-medium text-ink-muted">
             Jules · Preview
           </span>
         </div>
         <div className="flex items-center gap-3">
-          <span className="hidden text-[10px] text-ink-faint sm:inline">Shift + Enter for a new line</span>
+          <span className="hidden text-[12px] text-ink-faint sm:inline">Shift + Enter for a new line</span>
           <button
             aria-label="Send message"
             className="send-button"

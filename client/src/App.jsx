@@ -14,7 +14,7 @@ export default function App() {
   if (status === "loading") {
     return (
       <main className="grid min-h-screen place-items-center bg-canvas text-ink transition-colors duration-300 dark:bg-canvas dark:text-ink">
-        <div className="flex items-center gap-3 text-sm text-ink-muted">
+        <div className="flex items-center gap-3 text-base text-ink-muted">
           <span className="h-2 w-2 animate-pulse rounded-full bg-jules" />
           Preparing your space
         </div>

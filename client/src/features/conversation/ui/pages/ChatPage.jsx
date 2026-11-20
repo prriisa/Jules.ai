@@ -108,15 +108,15 @@ export default function ChatPage() {
             >
               <Menu size={19} />
             </button>
-            <span className="max-w-[42vw] truncate font-display text-[16px] font-medium tracking-[-0.03em] sm:max-w-[38vw] lg:max-w-[420px]">
+            <span className="max-w-[42vw] truncate font-display text-[18px] font-medium tracking-[-0.03em] sm:max-w-[38vw] lg:max-w-[420px]">
               {activeConversation?.title || "A new conversation"}
             </span>
-            <span className="hidden rounded-full border border-line px-2 py-1 text-[9px] font-semibold uppercase tracking-[0.12em] text-ink-faint sm:inline-flex">
+            <span className="hidden rounded-full border border-line px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-faint sm:inline-flex">
               Preview
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="hidden text-[11px] text-ink-faint md:inline">A space to think out loud</span>
+            <span className="hidden text-[13px] text-ink-faint md:inline">A space to think out loud</span>
             <ThemeToggle />
           </div>
         </header>
@@ -133,13 +133,13 @@ export default function ChatPage() {
                 <div className="chat-intro mb-8 grid h-12 w-12 place-items-center rounded-2xl bg-panel text-jules">
                   <Sparkles size={21} />
                 </div>
-                <p className="chat-intro mb-3 text-[11px] font-semibold uppercase tracking-[0.17em] text-jules">
+                <p className="chat-intro mb-3 text-[13px] font-semibold uppercase tracking-[0.17em] text-jules">
                   A little space for your ideas
                 </p>
-                <h1 className="chat-intro max-w-[620px] font-display text-[38px] font-medium leading-[1.13] tracking-[-0.045em] sm:text-[52px]">
+                <h1 className="chat-intro max-w-[620px] font-display text-[41px] font-medium leading-[1.13] tracking-[-0.045em] sm:text-[55px]">
                   What’s on your mind, {firstName}?
                 </h1>
-                <p className="chat-intro mt-4 max-w-[470px] text-[14px] leading-6 text-ink-muted">
+                <p className="chat-intro mt-4 max-w-[470px] text-[16px] leading-6 text-ink-muted">
                   Start anywhere. A question, a half-formed thought, or something you’re curious about.
                 </p>
                 <div className="mt-9 grid max-w-[690px] grid-cols-1 gap-2.5 sm:grid-cols-2">
@@ -155,8 +155,8 @@ export default function ChatPage() {
                       <span className="mb-3 grid h-7 w-7 place-items-center rounded-lg bg-panel text-jules">
                         <Sparkles size={14} className={index % 2 ? "rotate-12" : ""} />
                       </span>
-                      <span className="suggestion-card-title block text-[12px] font-medium">{suggestion.title}</span>
-                      <span className="suggestion-card-prompt mt-1 block text-[11px] leading-5">{suggestion.prompt}</span>
+                      <span className="suggestion-card-title block text-[14px] font-medium">{suggestion.title}</span>
+                      <span className="suggestion-card-prompt mt-1 block text-[13px] leading-5">{suggestion.prompt}</span>
                     </button>
                   ))}
                 </div>
@@ -166,23 +166,23 @@ export default function ChatPage() {
 
           <div className="w-full px-4 pb-4 pt-3 sm:px-8 sm:pb-6">
             {conversationError && (
-              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs text-red-600 dark:text-red-300" role="alert">
+              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-600 dark:text-red-300" role="alert">
                 {conversationError}
               </p>
             )}
             {logoutError && (
-              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs text-red-600 dark:text-red-300" role="alert">
+              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-600 dark:text-red-300" role="alert">
                 {logoutError}
               </p>
             )}
             {authError && (
-              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs text-red-600 dark:text-red-300" role="alert">
+              <p className="mx-auto mb-3 max-w-[760px] rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-600 dark:text-red-300" role="alert">
                 {authError}
               </p>
             )}
             {loggingOut && <p className="sr-only" role="status">Signing out…</p>}
             <ChatComposer draft={draft} onDraftChange={setDraft} onSend={handleSend} />
-            <p className="mx-auto mt-3 max-w-[760px] text-center text-[10px] text-ink-faint">
+            <p className="mx-auto mt-3 max-w-[760px] text-center text-[12px] text-ink-faint">
               Jules preview · Chats are saved in this browser · AI responses aren’t connected yet
             </p>
           </div>
