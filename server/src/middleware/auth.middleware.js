@@ -14,7 +14,9 @@ const authMiddleware = asyncHandler(async (req, _res, next) => {
   }
 
   const payload = verifyAccessToken(authorization.slice(7));
-  req.user = payload;
+  const user = await findUserById(payload.id);
+  if (!user) throw new AppError(401, "Authentication required");
+  req.user = user;
   next();
 });
 

@@ -2,7 +2,7 @@
 import { generateTitle } from "../services/ai/ai-title.service.js"
 import AppError from "../utils/AppError.js"
 import { sendSuccess } from "../utils/apiResponse.js"
-import { createConversation, findConversationByIdAndUser } from "../DAO/conversation.dao.js"
+import { createConversation, findConversationByIdAndUser, findConversationsByUser } from "../DAO/conversation.dao.js"
 import model from "../services/ai/main.service.js"
 import { createMessage, findMessagesByConversation } from "../DAO/message.dao.js"
 import { AIMessage, HumanMessage } from "langchain"
@@ -19,7 +19,7 @@ export const handleMessage = async (req, res, next) => {
         conversation = await createConversation({ user: user.id, title })
     }
     else {
-        conversation = await findConversationByIdAndUser(conversationId, user)
+        conversation = await findConversationByIdAndUser(conversationId, user.id)
 
         if (!conversation) {
             return next(new AppError(404, 'Conversation not found'))
@@ -82,4 +82,26 @@ export const handleMessage = async (req, res, next) => {
         content: JSON.stringify(aiMessage.toDict())
     })
 
+}
+
+export const getAllConversation = async (req, res) => {
+    let user = req.user
+
+    let conversation = await findConversationsByUser(user.id)
+
+    return sendSuccess(res,200, "Conversations fetched successfully", conversation)
+}
+
+export const getmessageByConversation = async (req, res, next) => {
+    const { conversationId } = req.params
+    const user = req.user
+
+    const conversation = await findConversationByIdAndUser(conversationId, user.id)
+    if (!conversation) {
+        return next(new AppError(404, "conversation not found"))
+    }
+
+    const message = await findMessagesByConversation(conversationId)
+
+    return sendSuccess(res, 200, "messages fetched successfully", message)
 }
