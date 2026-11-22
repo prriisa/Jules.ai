@@ -21,3 +21,11 @@ export async function createMessage(input) {
 export async function findMessagesByConversation(conversationId) {
     return MessageModel.find({ conversation: conversationId });
 }
+
+/**
+ * @param {string | import('mongoose').Types.ObjectId} conversationId Conversation identifier.
+ * @returns {Promise<import('mongoose').mongo.DeleteResult>} Deletion result containing deletedCount and acknowledged.
+ */
+export async function deleteMessagesByConversation(conversationId){
+    return MessageModel.deleteMany({ conversation: conversationId })
+}

@@ -2,9 +2,9 @@
 import { generateTitle } from "../services/ai/ai-title.service.js"
 import AppError from "../utils/AppError.js"
 import { sendSuccess } from "../utils/apiResponse.js"
-import { createConversation, findConversationByIdAndUser, findConversationsByUser } from "../DAO/conversation.dao.js"
+import { createConversation, deleteConversationByIdAndUser, findConversationByIdAndUser, findConversationsByUser } from "../DAO/conversation.dao.js"
 import model from "../services/ai/main.service.js"
-import { createMessage, findMessagesByConversation } from "../DAO/message.dao.js"
+import { createMessage, deleteMessagesByConversation, findMessagesByConversation } from "../DAO/message.dao.js"
 import { AIMessage, HumanMessage } from "langchain"
 
 export const handleMessage = async (req, res, next) => {
@@ -89,7 +89,7 @@ export const getAllConversation = async (req, res) => {
 
     let conversation = await findConversationsByUser(user.id)
 
-    return sendSuccess(res,200, "Conversations fetched successfully", conversation)
+    return sendSuccess(res, 200, "Conversations fetched successfully", conversation)
 }
 
 export const getmessageByConversation = async (req, res, next) => {
@@ -104,4 +104,27 @@ export const getmessageByConversation = async (req, res, next) => {
     const message = await findMessagesByConversation(conversationId)
 
     return sendSuccess(res, 200, "messages fetched successfully", message)
+}
+
+export const deleteConversation = async (req, res, next) => {
+    const { conversationId } = req.params
+    const user = req.user
+
+    const conversation = await findConversationByIdAndUser(conversationId, user.id)
+
+    if (!conversation) {
+        return next(new AppError(404, "conversation not found"))
+    }
+
+    const messages = await findMessagesByConversation(conversationId)
+
+    if(!messages){
+        return next(new AppError(404, "messages not found"))
+    }
+
+    await deleteConversationByIdAndUser(conversationId, user.id)
+
+    await deleteMessagesByConversation(conversationId)
+
+    return sendSuccess(res, 200, "conversation deleted successfully")
 }
