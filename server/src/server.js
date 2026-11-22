@@ -1,6 +1,8 @@
 import app from "./app.js";
 import { config } from "./config/env.js";
 import { connectDatabase } from "./config/db.js";
+import dns from "dns"
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 /**
  * Connects to MongoDB and starts the HTTP server.

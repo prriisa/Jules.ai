@@ -25,7 +25,7 @@ if (accessTokenSecret.length < 32 || refreshTokenSecret.length < 32) {
 
 export const config = Object.freeze({
   nodeEnv: process.env.NODE_ENV || "development",
-  port: Number(process.env.PORT || 4000),
+  port: Number(process.env.PORT || 5000),
   mongoUri: required(process.env.MONGODB_URI, "MONGODB_URI"),
   accessTokenSecret,
   refreshTokenSecret,
