@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
 export default function BrandMark({ compact = false, inverted = false }) {
   return (
@@ -13,7 +13,7 @@ export default function BrandMark({ compact = false, inverted = false }) {
           <circle cx="18.7" cy="5.3" r="1.25" fill="currentColor" opacity=".7" />
         </svg>
       </span>
-      {!compact && <span className="font-display text-[22px] font-semibold tracking-[-0.04em]">jules</span>}
+      {!compact && <span className="font-display text-[23px] font-semibold tracking-[-0.05em]">jules</span>}
     </Link>
-  );
+  )
 }

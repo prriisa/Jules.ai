@@ -1,28 +1,28 @@
-import { useLayoutEffect, useRef } from "react";
-import { Sparkles } from "lucide-react";
-import gsap from "gsap";
-import BrandMark from "./BrandMark.jsx";
-import ThemeToggle from "../../../../components/ThemeToggle.jsx";
+import { useLayoutEffect, useRef } from "react"
+import { Sparkles } from "lucide-react"
+import gsap from "gsap"
+import BrandMark from "./BrandMark.jsx"
+import ThemeToggle from "../../../../components/ThemeToggle.jsx"
 
 export default function AuthLayout({ children }) {
-  const layoutRef = useRef(null);
+  const layoutRef = useRef(null)
 
   useLayoutEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined
     const context = gsap.context(() => {
       gsap.fromTo(".auth-visual", { opacity: 0.65, scale: 1.035 }, {
         opacity: 1,
         scale: 1,
         duration: 1.2,
         ease: "power2.out"
-      });
+      })
       gsap.fromTo(".auth-hero-brand", { opacity: 0, y: -10 }, {
         opacity: 1,
         y: 0,
         duration: 0.55,
         delay: 0.1,
         ease: "power2.out"
-      });
+      })
       gsap.fromTo(".auth-hero-copy > *", { opacity: 0, y: 18 }, {
         opacity: 1,
         y: 0,
@@ -30,18 +30,18 @@ export default function AuthLayout({ children }) {
         stagger: 0.09,
         delay: 0.22,
         ease: "power3.out"
-      });
+      })
       gsap.fromTo(".auth-card", { opacity: 0, y: 16 }, {
         opacity: 1,
         y: 0,
         duration: 0.65,
         delay: 0.2,
         ease: "power3.out"
-      });
-    }, layoutRef);
+      })
+    }, layoutRef)
 
-    return () => context.revert();
-  }, []);
+    return () => context.revert()
+  }, [])
 
   return (
     <main className="min-h-screen bg-canvas text-ink transition-colors duration-300 dark:bg-canvas dark:text-ink" ref={layoutRef}>
@@ -110,5 +110,5 @@ export default function AuthLayout({ children }) {
         </section>
       </div>
     </main>
-  );
+  )
 }

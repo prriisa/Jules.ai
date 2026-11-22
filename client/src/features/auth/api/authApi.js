@@ -1,12 +1,13 @@
-import axios from "axios";
+import axios from "axios"
 
 const http = axios.create({
   baseURL: "/api/v1",
   withCredentials: true,
   headers: { "Content-Type": "application/json" }
-});
+})
 
-const authPath = "/auth";
+const authPath = "/auth"
+let refreshInFlight = null
 
 /**
  * Submits login credentials and returns the session data.
@@ -14,7 +15,7 @@ const authPath = "/auth";
  * @returns {Promise<{ accessToken: string, user: object }>} Authenticated session.
  */
 export const loginRequest = async (credentials) =>
-  (await http.post(`${authPath}/login`, credentials)).data.data;
+  (await http.post(`${authPath}/login`, credentials)).data.data
 
 /**
  * Creates an account and returns its authenticated session.
@@ -22,14 +23,22 @@ export const loginRequest = async (credentials) =>
  * @returns {Promise<{ accessToken: string, user: object }>} Authenticated session.
  */
 export const registerRequest = async (details) =>
-  (await http.post(`${authPath}/register`, details)).data.data;
+  (await http.post(`${authPath}/register`, details)).data.data
 
 /**
  * Rotates the current refresh cookie.
  * @returns {Promise<{ accessToken: string, user: object }>} Refreshed session.
  */
-export const refreshRequest = async () =>
-  (await http.post(`${authPath}/refresh`)).data.data;
+export const refreshRequest = () => {
+  if (!refreshInFlight) {
+    refreshInFlight = http.post(`${authPath}/refresh`)
+      .then((response) => response.data.data)
+      .finally(() => {
+        refreshInFlight = null
+      })
+  }
+  return refreshInFlight
+}
 
 /**
  * Loads the current user's public profile.
@@ -39,15 +48,15 @@ export const refreshRequest = async () =>
 export const meRequest = async (accessToken) =>
   (await http.get(`${authPath}/me`, {
     headers: { Authorization: `Bearer ${accessToken}` }
-  })).data.data.user;
+  })).data.data.user
 
 /**
  * Clears the server-side refresh token and browser cookie.
  * @returns {Promise<void>} Resolves when logout is complete.
  */
 export const logoutRequest = async () => {
-  await http.post(`${authPath}/logout`);
-};
+  await http.post(`${authPath}/logout`)
+}
 
 /**
  * Extracts a standard API error message for the UI.
@@ -56,8 +65,14 @@ export const logoutRequest = async () => {
  */
 export const getAuthError = (error) => {
   if (axios.isAxiosError(error)) {
-    const fieldMessage = error.response?.data?.errors?.[0]?.message;
-    return fieldMessage || error.response?.data?.message || "Something went wrong. Please try again.";
+    if (!error.response || error.response.status >= 500) {
+      return "The server isn't responding. Refresh the page and try again."
+    }
+    const fieldMessage = error.response?.data?.errors?.[0]?.message
+    return fieldMessage || error.response?.data?.message || "Something went wrong. Please try again."
   }
-  return "Something went wrong. Please try again.";
-};
+  if (error?.name === "TypeError" || /failed to fetch|network error|network request failed|load failed/i.test(error?.message || "")) {
+    return "The server isn't responding. Refresh the page and try again."
+  }
+  return "Something went wrong. Please try again."
+}

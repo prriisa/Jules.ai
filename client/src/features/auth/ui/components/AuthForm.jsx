@@ -1,20 +1,20 @@
-import { useState } from "react";
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
+import { useState } from "react"
+import { ArrowRight, Eye, EyeOff } from "lucide-react"
 
 export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) {
-  const [values, setValues] = useState({ name: "", email: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
-  const isRegister = mode === "register";
+  const [values, setValues] = useState({ name: "", email: "", password: "" })
+  const [showPassword, setShowPassword] = useState(false)
+  const isRegister = mode === "register"
 
   const update = (event) => {
-    setValues((current) => ({ ...current, [event.target.name]: event.target.value }));
-    if (error) onClearError();
-  };
+    setValues((current) => ({ ...current, [event.target.name]: event.target.value }))
+    if (error) onClearError()
+  }
 
   const submit = async (event) => {
-    event.preventDefault();
-    await onSubmit(values);
-  };
+    event.preventDefault()
+    await onSubmit(values)
+  }
 
   return (
     <form className="mt-8 space-y-5" onSubmit={submit}>
@@ -83,5 +83,5 @@ export default function AuthForm({ mode, onSubmit, error, onClearError, busy }) 
         {!busy && <ArrowRight className="transition-transform group-hover:translate-x-1" size={17} />}
       </button>
     </form>
-  );
+  )
 }

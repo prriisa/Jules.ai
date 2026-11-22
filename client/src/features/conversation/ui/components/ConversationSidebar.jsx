@@ -1,38 +1,143 @@
-import { useMemo, useState } from "react";
-import { LogOut, MessageSquare, Plus, Search, X } from "lucide-react";
-import BrandMark from "../../../auth/ui/components/BrandMark.jsx";
+import { useLayoutEffect, useMemo, useRef, useState } from "react"
+import { LogOut, Plus, Search, X } from "lucide-react"
+import gsap from "gsap"
+import BrandMark from "../../../auth/ui/components/BrandMark.jsx"
+
+function ConversationItem({ conversation, active, onSelect, onDelete }) {
+  const titleButtonRef = useRef(null)
+  const titleRef = useRef(null)
+  const deleteButtonRef = useRef(null)
+  const canDelete = !conversation.id.startsWith("pending-")
+
+  const animateDeleteButton = (isVisible) => {
+    if (!deleteButtonRef.current || !titleButtonRef.current || window.matchMedia("(hover: none)").matches) return
+    gsap.killTweensOf([
+      deleteButtonRef.current,
+      titleButtonRef.current,
+      titleRef.current
+    ])
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      gsap.set(deleteButtonRef.current, { autoAlpha: isVisible ? 1 : 0, x: 0 })
+      gsap.set(titleButtonRef.current, { paddingRight: isVisible ? 76 : 12 })
+      gsap.set(titleRef.current, { x: 0 })
+      return
+    }
+
+    if (isVisible) {
+      gsap.fromTo(
+        deleteButtonRef.current,
+        { autoAlpha: 0, x: 14 },
+        { autoAlpha: 1, x: 0, duration: 0.26, ease: "power2.out" }
+      )
+    } else {
+      gsap.to(deleteButtonRef.current, {
+        autoAlpha: 0,
+        x: 10,
+        duration: 0.2,
+        ease: "power2.inOut"
+      })
+    }
+
+    gsap.to(titleButtonRef.current, {
+      paddingRight: isVisible ? 76 : 12,
+      duration: 0.26,
+      ease: "power2.out"
+    })
+    gsap.to(titleRef.current, {
+      x: isVisible ? -3 : 0,
+      duration: 0.26,
+      ease: "power2.out"
+    })
+  }
+
+  useLayoutEffect(() => () => {
+    gsap.killTweensOf([
+      deleteButtonRef.current,
+      titleButtonRef.current,
+      titleRef.current
+    ])
+  }, [])
+
+  return (
+    <div
+      className="conversation-row group relative z-0 min-w-0 hover:z-20 focus-within:z-20"
+      onMouseEnter={() => animateDeleteButton(true)}
+      onMouseLeave={() => animateDeleteButton(false)}
+      onFocus={() => animateDeleteButton(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) animateDeleteButton(false)
+      }}
+    >
+      <button
+        ref={titleButtonRef}
+        aria-current={active ? "page" : undefined}
+        className={`conversation-link min-w-0 ${canDelete ? "conversation-link-delete" : ""} ${active ? "conversation-link-active" : ""}`}
+        onClick={() => onSelect(conversation.id)}
+        title={conversation.title}
+        type="button"
+      >
+        <span className="truncate" ref={titleRef}>{conversation.title}</span>
+      </button>
+      {canDelete && (
+        <button
+          ref={deleteButtonRef}
+          aria-label={`Delete ${conversation.title}`}
+          className="pointer-events-none absolute right-1 top-1/2 z-10 flex h-7 w-[62px] -translate-y-1/2 items-center justify-center rounded-lg bg-red-500/10 text-[10px] font-semibold tracking-[0.1em] text-red-600 opacity-0 transition-colors hover:bg-red-600 hover:text-white focus-visible:bg-red-600 focus-visible:text-white dark:text-red-300 dark:hover:text-white group-hover:pointer-events-auto group-focus-within:pointer-events-auto group-focus-within:opacity-100 max-lg:pointer-events-auto max-lg:opacity-100"
+          onClick={() => onDelete(conversation)}
+          title="Delete conversation"
+          type="button"
+        >
+          DELETE
+        </button>
+      )}
+    </div>
+  )
+}
 
 export default function ConversationSidebar({
   activeId,
   conversations,
   onClose,
+  onDeleteConversation,
   onLogout,
   onNewConversation,
   onSelectConversation,
   user
 }) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("")
+  const conversationListRef = useRef(null)
   const filteredConversations = useMemo(
     () => conversations.filter((item) => item.title.toLowerCase().includes(query.toLowerCase())),
     [conversations, query]
-  );
+  )
   const initials = user?.name
     ?.split(" ")
     .map((part) => part[0])
     .slice(0, 2)
     .join("")
-    .toUpperCase() || "J";
+    .toUpperCase() || "J"
+
+  useLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined
+    const rows = conversationListRef.current?.querySelectorAll(".conversation-row")
+    if (!rows?.length) return undefined
+    gsap.killTweensOf(rows)
+    gsap.fromTo(
+      rows,
+      { autoAlpha: 0, x: 8 },
+      { autoAlpha: 1, x: 0, duration: 0.2, stagger: 0.025, ease: "power2.out" }
+    )
+    return () => gsap.killTweensOf(rows)
+  }, [filteredConversations.length, query])
 
   return (
-    <aside className="flex h-full w-[286px] shrink-0 flex-col border-r border-line bg-sidebar px-3.5 py-4">
+    <aside className="flex h-full w-[286px] shrink-0 flex-col overflow-x-hidden border-r border-line bg-sidebar px-3.5 py-4">
       <div className="flex h-10 items-center justify-between px-1.5">
         <BrandMark />
-        <button className="icon-button lg:hidden" onClick={onClose} aria-label="Close sidebar" type="button">
+        <button className="icon-button" onClick={onClose} aria-label="Close sidebar" type="button">
           <X size={18} />
         </button>
-        <span className="hidden rounded-full border border-line px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-faint lg:inline-flex">
-          Preview
-        </span>
       </div>
 
       <button className="new-chat-button mt-7" onClick={onNewConversation} type="button">
@@ -57,22 +162,18 @@ export default function ConversationSidebar({
         <span className="text-[12px] text-ink-faint">{filteredConversations.length}</span>
       </div>
 
-      <nav aria-label="Recent conversations" className="flex-1 space-y-1 overflow-y-auto">
+      <nav aria-label="Recent conversations" className="min-w-0 flex-1 space-y-1 overflow-x-hidden overflow-y-auto" ref={conversationListRef}>
         {filteredConversations.map((conversation) => (
-          <button
-            aria-current={activeId === conversation.id ? "page" : undefined}
-            className={`conversation-link ${activeId === conversation.id ? "conversation-link-active" : ""}`}
+          <ConversationItem
             key={conversation.id}
-            onClick={() => {
-              onSelectConversation(conversation.id);
-              onClose();
+            active={activeId === conversation.id}
+            conversation={conversation}
+            onDelete={onDeleteConversation}
+            onSelect={(id) => {
+              onSelectConversation(id)
+              if (window.matchMedia("(max-width: 1023px)").matches) onClose()
             }}
-            title={conversation.title}
-            type="button"
-          >
-            <MessageSquare size={15} className="shrink-0" />
-            <span className="truncate">{conversation.title}</span>
-          </button>
+          />
         ))}
         {filteredConversations.length === 0 && (
           <p className="px-2 py-3 text-sm leading-5 text-ink-faint">
@@ -88,7 +189,7 @@ export default function ConversationSidebar({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate text-sm font-medium text-ink">{user?.name}</span>
-            <span className="block truncate text-[12px] text-ink-faint">Saved on this device</span>
+            <span className="block truncate text-[12px] text-ink-faint">Saved to your account</span>
           </span>
           <button
             aria-label="Sign out"
@@ -102,5 +203,5 @@ export default function ConversationSidebar({
         </div>
       </div>
     </aside>
-  );
+  )
 }

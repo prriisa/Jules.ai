@@ -1,15 +1,15 @@
-import { useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import ChatPage from "./features/conversation/ui/pages/ChatPage.jsx";
-import { useAuth } from "./features/auth/hooks/useAuth.js";
-import AuthPage from "./features/auth/ui/pages/AuthPage.jsx";
+import { useEffect } from "react"
+import { Navigate, Route, Routes } from "react-router-dom"
+import ChatPage from "./features/conversation/ui/pages/ChatPage.jsx"
+import { useAuth } from "./features/auth/hooks/useAuth.js"
+import AuthPage from "./features/auth/ui/pages/AuthPage.jsx"
 
 export default function App() {
-  const { status, restoreSession } = useAuth();
+  const { status, restoreSession } = useAuth()
 
   useEffect(() => {
-    restoreSession();
-  }, [restoreSession]);
+    restoreSession()
+  }, [restoreSession])
 
   if (status === "loading") {
     return (
@@ -19,14 +19,15 @@ export default function App() {
           Preparing your space
         </div>
       </main>
-    );
+    )
   }
 
   return (
     <Routes>
       <Route path="/auth" element={status === "authenticated" ? <Navigate to="/" replace /> : <AuthPage />} />
       <Route path="/" element={status === "authenticated" ? <ChatPage /> : <Navigate to="/auth" replace />} />
+      <Route path="/conversation/:conversationId" element={status === "authenticated" ? <ChatPage /> : <Navigate to="/auth" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
-  );
+  )
 }

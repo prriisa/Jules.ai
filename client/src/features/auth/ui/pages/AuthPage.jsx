@@ -1,30 +1,30 @@
-import { useState } from "react";
-import { useAuth } from "../../hooks/useAuth.js";
-import AuthForm from "../components/AuthForm.jsx";
-import AuthLayout from "../components/AuthLayout.jsx";
+import { useState } from "react"
+import { useAuth } from "../../hooks/useAuth.js"
+import AuthForm from "../components/AuthForm.jsx"
+import AuthLayout from "../components/AuthLayout.jsx"
 
 export default function AuthPage() {
-  const [mode, setMode] = useState("login");
-  const [busy, setBusy] = useState(false);
-  const { login, register, error, clearError } = useAuth();
-  const isRegister = mode === "register";
+  const [mode, setMode] = useState("login")
+  const [busy, setBusy] = useState(false)
+  const { login, register, error, clearError } = useAuth()
+  const isRegister = mode === "register"
 
   const submit = async (values) => {
-    setBusy(true);
+    setBusy(true)
     try {
-      if (isRegister) await register(values);
-      else await login({ email: values.email, password: values.password });
+      if (isRegister) await register(values)
+      else await login({ email: values.email, password: values.password })
     } catch {
       // The error is already available in Redux for the form.
     } finally {
-      setBusy(false);
+      setBusy(false)
     }
-  };
+  }
 
   const switchMode = (nextMode) => {
-    clearError();
-    setMode(nextMode);
-  };
+    clearError()
+    setMode(nextMode)
+  }
 
   return (
     <AuthLayout>
@@ -64,5 +64,5 @@ export default function AuthPage() {
         </p>
       </div>
     </AuthLayout>
-  );
+  )
 }
