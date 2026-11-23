@@ -5,15 +5,20 @@ import { config } from "./config/env.js";
 import apiRouter from "./routes/index.routes.js";
 import notFoundMiddleware from "./middleware/notFound.middleware.js";
 import errorMiddleware from "./middleware/error.middleware.js";
+import dns from "dns";
+import { connectDatabase } from "./config/db.js";
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+await connectDatabase();
 
 const app = express();
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan(config.nodeEnv === "production" ? "combined" : "dev"));
 app.use("/api/v1", apiRouter);
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
     res.send("server working")
 })
 app.use(notFoundMiddleware);

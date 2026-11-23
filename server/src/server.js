@@ -1,8 +1,8 @@
 import app from "./app.js";
 import { config } from "./config/env.js";
 import { connectDatabase } from "./config/db.js";
-import dns from "dns"
-dns.setServers(['8.8.8.8', '1.1.1.1']);
+// import dns from "dns"
+// dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 /**
  * Connects to MongoDB and starts the HTTP server.
@@ -10,7 +10,7 @@ dns.setServers(['8.8.8.8', '1.1.1.1']);
  * @throws {Error} When database startup fails.
  */
 const startServer = async () => {
-  await connectDatabase();
+  // await connectDatabase();
   app.listen(config.port, () => {
     console.log(`Jules API listening on port ${config.port}.`);
   });
